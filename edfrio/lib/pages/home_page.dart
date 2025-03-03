@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
             ),
             child: Row(
               children: [
-                Text("EdFrio",),
+                Image(image: AssetImage('assets/images/logo.png'), height: 40,),
                 Spacer(),
 
                 for(int i = 0; i<navTitles.length; i++)
