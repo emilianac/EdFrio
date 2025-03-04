@@ -18,7 +18,7 @@ class _SiteLogoState extends State<SiteLogo> {
                 onTap: widget.onTap,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20, top: 5, bottom: 5),
-                  child: Text('EdFrio', style: kTitle
+                  child: Text('EdFrio', style: kLogo
                   ),
                 ),
               );

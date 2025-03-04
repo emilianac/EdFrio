@@ -14,7 +14,7 @@ class _DrawerMobileState extends State<DrawerMobile> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-        backgroundColor: CustomColor.scaffoldBg,
+        backgroundColor: CustomColor.primaryColor,
         child: ListView(
           children: [
             Align(

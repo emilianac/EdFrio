@@ -11,7 +11,7 @@ List<String> navTitles = [
 List<IconData> navIcons = [
   Icons.home_outlined,
   Icons.info_outline,
-  Icons.business,
+  Icons.handyman_outlined,
   Icons.shopping_cart,
   Icons.mail_outline,
 ];
