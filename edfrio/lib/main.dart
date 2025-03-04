@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
-      title: 'EdFrio',
+      title: 'EdFrio Comércio e Locação LTDA.',
       home: const HomePage(),
     );
   }
