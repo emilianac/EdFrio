@@ -58,14 +58,6 @@ class _MainDesktopState extends State<MainDesktop> {
                         const SizedBox(
                           height: 20
                         ),
-                        SizedBox(
-                          width: 250,
-                          child: ElevatedButton(
-                          onPressed: () {}, 
-                          style: kButton,
-                          child: Text("Entre em contato", style: kNavItems),
-                          ),
-                        )
                       ],
                     )
                   ],

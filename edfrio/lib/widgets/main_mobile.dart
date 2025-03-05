@@ -72,14 +72,6 @@ class _MainMobileState extends State<MainMobile> {
                         const SizedBox(
                           height: 20
                         ),
-                        SizedBox(
-                          width: 190,
-                          child: ElevatedButton(
-                          onPressed: () {}, 
-                          style: kButton,
-                          child: Text("Entre em contato", style: kNavItems),
-                          ),
-                        )
                   ],
                 )
             ],

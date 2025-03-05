@@ -13,6 +13,21 @@ BoxDecoration kHeaderDecoration = BoxDecoration(
               borderRadius: BorderRadius.circular(100),
 );
 
+BoxDecoration kServices = BoxDecoration(
+  color: CustomColor.scaffoldBg,
+  borderRadius: BorderRadius.circular(10),
+);
+
+BoxDecoration kServices2 = BoxDecoration(
+  color: CustomColor.primaryColor,
+  borderRadius: BorderRadius.circular(5.0),
+);
+
+BoxDecoration kAbout = BoxDecoration(
+  color: CustomColor.scaffoldBg,
+  borderRadius: BorderRadius.circular(5.0),
+);
+
 TextStyle kNavItems = TextStyle(
    fontSize: 16,
    fontWeight: FontWeight.w500,
@@ -58,4 +73,22 @@ TextStyle kButtonText = TextStyle(
   fontSize: 24,
   fontWeight: FontWeight.bold,
   color: Colors.white54,
+);
+
+TextStyle kServicesTitleStyle = TextStyle(
+  fontSize: 20,
+  fontWeight: FontWeight.w600,
+  color: CustomColor.primaryColor,
+);
+
+TextStyle kServicesTextStyle = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w100,
+  color: Colors.white,
+);
+
+TextStyle kAboutText = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w200,
+  color: Colors.black45,
 );

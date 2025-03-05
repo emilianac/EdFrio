@@ -4,9 +4,14 @@ import 'package:edfrio/widgets/main_mobile.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/size.dart';
+import '../styles/style.dart';
+import '../widgets/about_desktop.dart';
+import '../widgets/about_mobile.dart';
 import '../widgets/drawer_mobile.dart';
 import '../widgets/header_desktop.dart';
 import '../widgets/main_desktop.dart';
+import '../widgets/services_desktop.dart';
+import '../widgets/services_mobile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -44,37 +49,70 @@ class _HomePageState extends State<HomePage> {
               else
                 const MainMobile(),
 
-               //Info
+
               Container(
-                height: 500,
-                width: double.maxFinite,
-                color: Color(0xFF1E3D6D),
-              ),
-        
-               //Products
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.fromLTRB(25, 20, 25, 20),
+                decoration: kServices2,
+                child: Column(
+                   mainAxisSize: MainAxisSize.min,
+                   children: [
+                      Text(
+                          "O que é EdFrio Comércio e Locação?",
+                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: CustomColor.secondaryColor),
+                        ),
+                        const AboutDesktop()
+                    ],
+                  ),
+                ),
+
+
               Container(
-                height: 500,
-                width: double.maxFinite,
-                color: Colors.blueGrey,
-              ),
-        
-               //Contact
-              Container(
-                height: 500,
-                width: double.maxFinite,
-                color: Colors.blueGrey,
-              ),
-        
-              //Footer
-              Container(
-                height: 500,
-                width: double.maxFinite,
-                color: Colors.blueGrey,
-              ),
-            ],
-          ),
-        );
-      }
-    );
-  }
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.fromLTRB(25, 20, 25, 20),
+                decoration: kServices2,
+                child: Column(
+                   mainAxisSize: MainAxisSize.min,
+                   children: [
+                      Text(
+                          "Nossos serviços:",
+                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                        ),
+
+                      if(constraints.maxWidth > kMedDesktopWidth)
+                        const ServicesDesktop()
+                      else
+                        const ServicesMobile(),
+                    ],
+                  ),
+                ),
+
+
+                Container(
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.fromLTRB(25, 20, 25, 20),
+                decoration: kServices2,
+                child: Column(
+                   mainAxisSize: MainAxisSize.min,
+                   children: [
+                      Text(
+                          "Alguns dos nossos produtos:",
+                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                        ),
+
+                      //if(constraints.maxWidth > kMedDesktopWidth)
+                        //const ServicesDesktop()
+                      //else
+                        //const ServicesMobile(),
+                    ],
+                  ),
+                ),
+
+
+              ],
+            ),
+          );
+        }
+      );
+    }
 }
