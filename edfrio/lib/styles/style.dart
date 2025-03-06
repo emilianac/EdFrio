@@ -24,7 +24,12 @@ BoxDecoration kServices2 = BoxDecoration(
 );
 
 BoxDecoration kAbout = BoxDecoration(
-  color: CustomColor.scaffoldBg,
+  color: Colors.white54,
+  borderRadius: BorderRadius.circular(5.0),
+);
+
+BoxDecoration kProducts = BoxDecoration(
+  color: CustomColor.primaryColor.withOpacity(0.10),
   borderRadius: BorderRadius.circular(5.0),
 );
 
@@ -78,7 +83,7 @@ TextStyle kButtonText = TextStyle(
 TextStyle kServicesTitleStyle = TextStyle(
   fontSize: 20,
   fontWeight: FontWeight.w600,
-  color: CustomColor.primaryColor,
+  color: CustomColor.secondaryColor,
 );
 
 TextStyle kServicesTextStyle = TextStyle(
@@ -89,6 +94,52 @@ TextStyle kServicesTextStyle = TextStyle(
 
 TextStyle kAboutText = TextStyle(
   fontSize: 16,
-  fontWeight: FontWeight.w200,
-  color: Colors.black45,
+  fontWeight: FontWeight.w300,
+  color: CustomColor.primaryColor,
 );
+
+TextStyle kProductsTitle = TextStyle(
+  fontSize: 20,
+  fontWeight: FontWeight.bold,
+  color: CustomColor.secondaryColor,
+);
+
+TextStyle kProductsTitle2 = TextStyle(
+  fontSize: 20,
+  fontWeight: FontWeight.bold,
+  color: CustomColor.primaryColor,
+);
+
+TextStyle kProductsText = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w200,
+  color: CustomColor.primaryColor,
+);
+
+TextStyle kProductsText2 = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.bold,
+  color: CustomColor.primaryColor,
+);
+
+TextStyle kInputText = TextStyle(
+  color: CustomColor.scaffoldBg,
+);
+
+InputDecoration kInput = InputDecoration(
+  contentPadding: EdgeInsets.all(16),
+  filled: true,
+  fillColor: Colors.white,
+  focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide.none
+    ),
+  enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide.none,
+    ),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide.none,
+    ),
+  );

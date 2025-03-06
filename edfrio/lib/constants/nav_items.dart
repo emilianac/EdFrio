@@ -5,6 +5,7 @@ List<String> navTitles = [
   'Sobre',
   'Serviços',
   'Produtos',	
+  'Localização',
   'Contato',
 ];
 
@@ -13,5 +14,6 @@ List<IconData> navIcons = [
   Icons.info_outline,
   Icons.handyman_outlined,
   Icons.shopping_cart,
+  Icons.map_outlined,
   Icons.mail_outline,
 ];

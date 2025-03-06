@@ -68,7 +68,10 @@ class _AboutDesktopState extends State<AboutDesktop> {
                           style: kButton,
                           child: Text("Entre em contato", style: kNavItems),
                           ),
-                        )
+                        ),
+                         const SizedBox(
+                          height: 100
+                        ),
                       ],
                     )
                   ],

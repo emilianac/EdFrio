@@ -30,25 +30,28 @@ class _ServicesDesktopState extends State<ServicesDesktop> {
                                   decoration: kServices,
                                   margin: EdgeInsets.all(8.0),
                                   child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                  Image.asset(
-                                                      servicesItems[i]["img"],
-                                                      width: 70,
-                                                    ),
-                                                  SizedBox(height: 8.0),
-                                                  Text(
-                                                      servicesItems[i]["title"],
-                                                      style: kServicesTitleStyle,
-                                                      textAlign: TextAlign.center,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                          Image.asset(
+                                              servicesItems[i]["img"],
+                                              width: 70,
+                                            ),
+                                          SizedBox(height: 8.0),
+                                          Text(
+                                              servicesItems[i]["title"],
+                                              style: kServicesTitleStyle,
+                                              textAlign: TextAlign.center,
+                                          ),
+                                          SizedBox(height: 4.0),
+                                          Container(
+                                              padding: EdgeInsets.all(10.0),
+                                                child: Text(
+                                                    servicesItems[i]["description"],
+                                                    style: kProductsText,
+                                                    textAlign: TextAlign.justify,
                                                   ),
-                                                  SizedBox(height: 4.0),
-                                                  Text(
-                                                      servicesItems[i]["description"],
-                                                      style: kServicesTextStyle,
-                                                      textAlign: TextAlign.center,
-                                                  ),
-                                              ],
+                                            ),
+                                        ],
                                     ),
                                 ),
                           ],
