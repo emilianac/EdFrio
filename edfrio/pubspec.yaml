@@ -58,6 +58,10 @@ flutter:
   uses-material-design: true
   assets:
        - assets/images/logo.png
+       - assets/images/whatsapp.png
+       - assets/images/facebook.png
+       - assets/images/instagram.png
+       - assets/images/email.png
 
        - assets/products/gerador.png
        - assets/products/limpeza (1).png

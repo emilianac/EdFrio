@@ -2,7 +2,7 @@ List<Map> servicesItems = [
   {
     "img": "assets/services/sales.png",
     "title": "Venda de Equipamentos de Alta Qualidade",
-    "description": "Na EdFrio Comércio e Locação Ltda, oferecemos uma ampla gama de produtos essenciais para o seu negócio. Comercializamos resfriadores de leite, ordenhadeiras, peças elétricas e de manutenção, além de soluções de limpeza e geradores. Todos os nossos produtos são de alta qualidade, projetados para garantir eficiência e durabilidade. Se você busca otimizar a operação do seu negócio, temos as melhores opções, com suporte completo.",
+    "description": "Na EdFrio Comércio e Locação Ltda, oferecemos uma ampla gama de produtos essenciais para o seu negócio. Comercializamos resfriadores de leite, ordenhadeiras, peças elétricas e de manutenção, além de soluções de limpeza e geradores. Todos os nossos produtos são de alta qualidade, projetados para garantir eficiência, durabilidade e desempenho superior. Se você busca otimizar a operação do seu negócio, temos as melhores opções, com suporte completo e um atendimento personalizado.",
   },
 
   {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../constants/colors.dart';
 
+//Main
 BoxDecoration kHeaderDecoration = BoxDecoration(
   gradient: const LinearGradient(
                 colors: [
@@ -11,26 +12,6 @@ BoxDecoration kHeaderDecoration = BoxDecoration(
                     ],
                   ),
               borderRadius: BorderRadius.circular(100),
-);
-
-BoxDecoration kServices = BoxDecoration(
-  color: CustomColor.scaffoldBg,
-  borderRadius: BorderRadius.circular(10),
-);
-
-BoxDecoration kServices2 = BoxDecoration(
-  color: CustomColor.primaryColor,
-  borderRadius: BorderRadius.circular(5.0),
-);
-
-BoxDecoration kAbout = BoxDecoration(
-  color: Colors.white54,
-  borderRadius: BorderRadius.circular(5.0),
-);
-
-BoxDecoration kProducts = BoxDecoration(
-  color: CustomColor.primaryColor.withOpacity(0.10),
-  borderRadius: BorderRadius.circular(5.0),
 );
 
 TextStyle kNavItems = TextStyle(
@@ -47,7 +28,6 @@ TextStyle kLogo = TextStyle(
 
 TextStyle kTitle = TextStyle(
   fontSize: 24,
-  height: 1.5,
   fontWeight: FontWeight.bold,
   color: CustomColor.primaryColor,
 );
@@ -66,18 +46,15 @@ TextStyle kBody2 = TextStyle(
   color: CustomColor.secondaryColor,
 );
 
-ButtonStyle kButton = ButtonStyle(
-  backgroundColor: MaterialStateProperty.all(CustomColor.secondaryColor),
-                            padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 15)),
-                            shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50))
-  ),
+//Services
+BoxDecoration kServices = BoxDecoration(
+  color: CustomColor.scaffoldBg,
+  borderRadius: BorderRadius.circular(10),
 );
 
-TextStyle kButtonText = TextStyle(
-  fontSize: 24,
-  fontWeight: FontWeight.bold,
-  color: Colors.white54,
+BoxDecoration kServices2 = BoxDecoration(
+  color: CustomColor.primaryColor,
+  borderRadius: BorderRadius.circular(5.0),
 );
 
 TextStyle kServicesTitleStyle = TextStyle(
@@ -92,10 +69,36 @@ TextStyle kServicesTextStyle = TextStyle(
   color: Colors.white,
 );
 
+//About
+BoxDecoration kAbout = BoxDecoration(
+  color: Colors.white54,
+  borderRadius: BorderRadius.circular(5.0),
+);
+
 TextStyle kAboutText = TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.w300,
   color: CustomColor.primaryColor,
+);
+
+ButtonStyle kButton = ButtonStyle(
+  backgroundColor: MaterialStateProperty.all(CustomColor.secondaryColor),
+                            padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 15)),
+                            shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50))
+  ),
+);
+
+TextStyle kButtonText = TextStyle(
+  fontSize: 24,
+  fontWeight: FontWeight.bold,
+  color: Colors.white54,
+);
+
+//Products
+BoxDecoration kProducts = BoxDecoration(
+  color: CustomColor.primaryColor.withOpacity(0.10),
+  borderRadius: BorderRadius.circular(5.0),
 );
 
 TextStyle kProductsTitle = TextStyle(
@@ -122,24 +125,16 @@ TextStyle kProductsText2 = TextStyle(
   color: CustomColor.primaryColor,
 );
 
+//Text Field
+BoxDecoration kBoxContact = BoxDecoration(
+  color: CustomColor.primaryColor.withOpacity(0.20),
+  borderRadius: BorderRadius.circular(10),
+);
+
 TextStyle kInputText = TextStyle(
   color: CustomColor.scaffoldBg,
 );
 
-InputDecoration kInput = InputDecoration(
-  contentPadding: EdgeInsets.all(16),
-  filled: true,
-  fillColor: Colors.white,
-  focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10),
-      borderSide: BorderSide.none
-    ),
-  enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10),
-      borderSide: BorderSide.none,
-    ),
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10),
-      borderSide: BorderSide.none,
-    ),
-  );
+TextStyle kHintStyle = TextStyle(
+  color: Colors.white38,
+);
