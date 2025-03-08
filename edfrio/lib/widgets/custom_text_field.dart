@@ -19,11 +19,11 @@ class CustomTextField extends StatelessWidget {
     return TextField(
       controller: controller,
       maxLines: maxLines,
-      style: kProductsTitle2,
+      style: kHintStyle,
       decoration: InputDecoration(
               contentPadding: const EdgeInsets.all(16),
               filled: true,
-              fillColor: CustomColor.primaryColor,
+              fillColor: CustomColor.primaryColor.withOpacity(0.10),
               focusedBorder: getInputBorder,
               enabledBorder: getInputBorder,
               border: getInputBorder,

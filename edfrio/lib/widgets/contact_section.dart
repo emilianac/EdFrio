@@ -20,13 +20,12 @@ class _ContactSectionState extends State<ContactSection> {
     return  Container(
                 width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.fromLTRB(50, 20, 50, 20),
-                decoration: kBoxContact,
                 child: Column(
                    mainAxisSize: MainAxisSize.min,
                    children: [
                       Text(
                           "Entre em contato conosco:",
-                          style: kProductsTitle2,
+                          style: kTitle,
                         ),
                       const SizedBox(
                             height: 50,
@@ -68,7 +67,8 @@ class _ContactSectionState extends State<ContactSection> {
                             onPressed: (){}, 
                             style: kButton,
                             child: Text(
-                              "Entre em contato!"
+                              "Entre em contato!",
+                              style: kButtonText,
                               ),
                             ),
                         ),

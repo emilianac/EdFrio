@@ -23,6 +23,11 @@ class _ProductsMobileState extends State<ProductsMobile> {
                   builder: (context, constraints) {
                     return Column(
                             children: [
+                              Text(
+                                "Alguns dos nossos produtos:",
+                                style: kTitle,
+                              ),
+                              SizedBox(height: 50),
                               Expanded(
                                 child: ListView.builder(
                                   itemCount: productsitems.length,
@@ -43,7 +48,7 @@ class _ProductsMobileState extends State<ProductsMobile> {
                                           SizedBox(height: 5.0),
                                           Text(
                                             productsitems[index]["title"],
-                                            style: kProductsTitle,
+                                            style: kTitleProducts,
                                             textAlign: TextAlign.center,
                                           ),
                                           SizedBox(height: 5.0),
@@ -51,7 +56,7 @@ class _ProductsMobileState extends State<ProductsMobile> {
                                             padding: EdgeInsets.all(10.0),
                                               child: Text(
                                                   productsitems[index]["description"],
-                                                  style: kProductsText,
+                                                  style: kBody,
                                                   textAlign: TextAlign.justify,
                                                 ),
                                           ),
@@ -61,12 +66,18 @@ class _ProductsMobileState extends State<ProductsMobile> {
                                   },
                                 ),
                               ),
-                              SizedBox(height: 20.0),
-                                Text(
-                                  "Apresentamos uma pequena amostra de nossa linha completa de soluções para a indústria leiteira. Na EdFrio Comércio e Locação Ltda, oferecemos uma variedade de equipamentos e produtos de excelente qualidade, desenvolvidos para atender às necessidades específicas de cada cliente, com total compromisso com a eficiência e durabilidade. Caso queira saber mais sobre nossos produtos ou esclarecer qualquer dúvida sobre como podemos ajudar seu negócio, entre em contato conosco ou nos faça uma visita. Estamos prontos para oferecer as melhores soluções para o seu sucesso.",
-                                  style: kProductsText2,
+                              SizedBox(height: 50),
+                              Container(
+                                padding: EdgeInsets.fromLTRB(20, 10, 10, 20),
+                                decoration: kServicesDecoration,
+                                alignment: Alignment.center,
+                                height: 200,
+                                child: Text(
+                                  "Apresentamos uma pequena amostra de nossa linha completa de soluções para a indústria leiteira. Na EdFrio Comércio e Locação Ltda, oferecemos uma variedade de equipamentos e produtos de excelente qualidade, desenvolvidos para atender às necessidades específicas de cada cliente, com total compromisso com a eficiência e durabilidade",
+                                  style: kBodyProducts,
                                   textAlign: TextAlign.justify,
                                 ),
+                              ),
                             ],
                           );
                         }

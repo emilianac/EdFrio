@@ -33,7 +33,7 @@ class _HeaderDesktopState extends State<HeaderDesktop> {
                   child: TextButton(onPressed: (){
             
                   }, 
-                  child: Text(navTitles[i], style: kNavItems,
+                  child: Text(navTitles[i], style: kNavItemsText,
                     ),
                   ),
                 ),

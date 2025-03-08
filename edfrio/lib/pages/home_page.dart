@@ -1,16 +1,16 @@
 import 'package:edfrio/constants/colors.dart';
-import 'package:edfrio/widgets/contact_section.dart';
+import 'package:edfrio/widgets/footer_section.dart';
 import 'package:edfrio/widgets/header_mobile.dart';
 import 'package:edfrio/widgets/main_mobile.dart';
-import 'package:edfrio/widgets/products_desktop.dart';
-import 'package:edfrio/widgets/products_mobile.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/size.dart';
-import '../styles/style.dart';
+import '../widgets/contact_section.dart';
 import '../widgets/drawer_mobile.dart';
 import '../widgets/header_desktop.dart';
 import '../widgets/main_desktop.dart';
+import '../widgets/products_desktop.dart';
+import '../widgets/products_mobile.dart';
 import '../widgets/services_desktop.dart';
 import '../widgets/services_mobile.dart';
 
@@ -49,55 +49,33 @@ class _HomePageState extends State<HomePage> {
                 const MainDesktop()
               else
                 const MainMobile(),
+                SizedBox(height: 100,),
 
               //Services
-              Container(
-                width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.fromLTRB(25, 200, 25, 20),
-                decoration: kServices2,
-                child: Column(
-                   mainAxisSize: MainAxisSize.min,
-                   children: [
-                      Text(
-                          "Nossos serviços:",
-                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
-                        ),
+              if(constraints.maxWidth > kMedDesktopWidth)
+                const ServicesDesktop()
+              else
+                const ServicesMobile(),
 
-                      if(constraints.maxWidth > kMedDesktopWidth)
-                        const ServicesDesktop()
-                      else
-                        const ServicesMobile(),
-                    ],
-                  ),
-                ),
+            SizedBox(height: 200,),
 
-                //Products
-                Container(
-                width: MediaQuery.of(context).size.width,
-                padding: EdgeInsets.fromLTRB(25, 25, 25, 10),
-                decoration: kProducts,
-                child: Column(
-                   mainAxisSize: MainAxisSize.min,
-                   children: [
-                      Text(
-                          "Alguns dos nossos produtos:",
-                          style: kProductsTitle2,
-                        ),
+            //Products
+            if(constraints.maxWidth > kMedDesktopWidth)
+              const ProductsDesktop()
+            else
+              const ProductsMobile(),
 
-                      if(constraints.maxWidth > kMedDesktopWidth)
-                        const ProductsDesktop()
-                      else
-                        const ProductsMobile(),
-                    ],
-                  ),
-                ),
+            SizedBox(height: 100,),
+    
+            //Contact
+            ContactSection(),
 
-              //Contact
-             ContactSection(),
-              ],
-            ),
-          );
-        }
-      );
-    }
+            //Footer
+            FooterSection(),
+            ],
+          ),
+        );
+      }
+    );
+  }
 }
