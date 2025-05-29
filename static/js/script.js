@@ -38,12 +38,44 @@ function buscarCep() {
                 return;
             }
 
+            const estados = {
+                'AC': 'Acre',
+                'AL': 'Alagoas',
+                'AP': 'Amapá',
+                'AM': 'Amazonas',
+                'BA': 'Bahia',
+                'CE': 'Ceará',
+                'DF': 'Distrito Federal',
+                'ES': 'Espírito Santo',
+                'GO': 'Goiás',
+                'MA': 'Maranhão',
+                'MT': 'Mato Grosso',
+                'MS': 'Mato Grosso do Sul',
+                'MG': 'Minas Gerais',
+                'PA': 'Pará',
+                'PB': 'Paraíba',
+                'PR': 'Paraná',
+                'PE': 'Pernambuco',
+                'PI': 'Piauí',
+                'RJ': 'Rio de Janeiro',
+                'RN': 'Rio Grande do Norte',
+                'RS': 'Rio Grande do Sul',
+                'RO': 'Rondônia',
+                'RR': 'Roraima',
+                'SC': 'Santa Catarina',
+                'SP': 'São Paulo',
+                'SE': 'Sergipe',
+                'TO': 'Tocantins'
+            };
+
             document.getElementById('logradouro').value = data.logradouro || '';
             document.getElementById('bairro').value = data.bairro || '';
             document.getElementById('cidade').value = data.localidade || '';
-            document.getElementById('estado').value = data.uf || '';
+
+            const nomeEstado = estados[data.uf] || data.uf;
+            document.getElementById('estado').value = nomeEstado;
         })
-            .catch(error => console.error('Erro ao buscar CEP:', error));
+        .catch(error => console.error('Erro ao buscar CEP:', error));
     }
 
 // Formatar RG
@@ -64,20 +96,6 @@ const rgInput = document.getElementById('rg');
 
     });
 
-// Formatar data
-document.getElementById('data_inicio').addEventListener('input', function (e) {
-  let original = e.target.value;
-  let input = original.replace(/\D/g, '');
-  if (input.length > 2) {
-    input = input.slice(0, 2) + '/' + input.slice(2);
-  }
-  if (input.length > 5) {
-    input = input.slice(0, 5) + '/' + input.slice(5, 9);
-  }
-  console.log('Antes:', original, 'Depois:', input);
-  e.target.value = input;
-});
-
 // Data fim
 function calcularDataFim() {
   const dataInicioStr = document.getElementById('data_inicio').value;
@@ -85,12 +103,12 @@ function calcularDataFim() {
 
   if (!dataInicioStr || !prazoMesesStr) return;
 
-  const partesData = dataInicioStr.split('/');
+  const partesData = dataInicioStr.split('-');
   if (partesData.length !== 3) return;
 
-  const dia = parseInt(partesData[0], 10);
-  const mes = parseInt(partesData[1], 10) - 1; // JavaScript conta meses de 0 a 11
-  const ano = parseInt(partesData[2], 10);
+  const ano = parseInt(partesData[0], 10);
+  const mes = parseInt(partesData[1], 10) - 1;
+  const dia = parseInt(partesData[2], 10);
   const prazoMeses = parseInt(prazoMesesStr, 10);
 
   if (isNaN(dia) || isNaN(mes) || isNaN(ano) || isNaN(prazoMeses)) return;
@@ -102,6 +120,6 @@ function calcularDataFim() {
   const mesFim = String(data.getMonth() + 1).padStart(2, '0');
   const anoFim = data.getFullYear();
 
-  const dataFim = `${diaFim}/${mesFim}/${anoFim}`;
+  const dataFim = `${anoFim}-${mesFim}-${diaFim}`; // formato para input type="date"
   document.getElementById('data_fim').value = dataFim;
 }

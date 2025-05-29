@@ -9,8 +9,8 @@
 <body>
     <div class="logo"></div>
     <div class="container">
-        <h1>Formulário Locação</h1>
-        <form method="POST" action="/">
+        <h1>Formulário Locação Ordenhadeira</h1>
+        <form method="POST" action="/form_aluguel_ord" id="form_aluguel_ord">
             <fieldset>
                 <legend>Informações Pessoais</legend>
 
@@ -93,15 +93,24 @@
                 <fieldset>
                 
                 <legend>Objeto</legend>
+
+                <label for="quantidade">Quantidade</label>
+                <input type="number" id="quantidade" name="quantidade" min="1" required />
                 
-                <label for="text">Objeto</label>
+                <label for="objeto">Objeto</label>
                 <input type="text" id="objeto" name="objeto" required />
 
-                <label for="text">Marca</label>
+                <label for="marca">Marca</label>
                 <input type="text" id="marca" name="marca" required />
 
-                <label for="text">Modelo</label>
+                <label for="modelo">Modelo</label>
                 <input type="text" id="modelo" name="modelo" required />
+                
+                <label for="cavalo">Cavalo</label>
+                <input type="text" id="cavalo" name="cavalo" required />
+
+                <label for="qtd">Quantidade</label>
+                <input type="number" id="qtd" name="qtd" min="1" required />
 
                 </fieldset>
                 <fieldset>
@@ -112,10 +121,10 @@
                 <input type="text" id="prazo_meses" name="prazo_meses" required oninput="calcularDataFim()" />
 
                 <label for="data_inicio">Data de Início</label>
-                <input type="text" id="data_inicio" name="data_inicio" required onchange="calcularDataFim()" />
+                <input type="date" id="data_inicio" name="data_inicio" required value="{{ data_inicio }}" onchange="calcularDataFim()" />
 
                 <label for="data_fim">Data de Término</label>
-                <input type="text" id="data_fim" name="data_fim" readonly />
+                <input type="date" id="data_fim" name="data_fim" readonly />
                 
                 </fieldset>
                 <fieldset>

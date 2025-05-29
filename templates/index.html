@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Documentação</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+    <fieldset>
+        <legend>Contrato Aluguel Resfriador</legend>
+        <a href="{{ url_for('form_aluguel') }}" class="btn">Fazer contrato</a>
+    </fieldset>
+    <fieldset>
+        <legend>Contrato Aluguel Ordenha</legend>
+        <a href="{{ url_for('form_aluguel_ord') }}" class="btn">Fazer contrato</a>
+    </fieldset>
+    </div>
+</body>
+</html>

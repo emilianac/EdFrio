@@ -113,6 +113,16 @@ button:hover {
 button:active {
     transform: scale(0.98);
 }
+ 
+a {
+    text-decoration: none;
+    color: #8a6c14e3;
+    font-weight: 600;
+    display: inline-block;
+    border: none;
+    border-radius: 10px;
+    margin-top: 15px; /* espaço acima do link */
+}
 
 /* Responsivo */
 @media (max-width: 600px) {
