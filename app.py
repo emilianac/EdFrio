@@ -9,19 +9,76 @@ from num2words import num2words
 
 app = Flask(__name__)
 
-CAMINHO_MODELO = os.path.join(os.path.dirname(__file__), 'CONTRATO DE LOCAÇÃO DE RESFRIADOR.docx')
+# Constant for fallback messages
+VALOR_INVALIDO_MSG = "Valor inválido"
+
+CAMINHO_MODELO = os.path.join(os.path.dirname(__file__), 'CONTRATO DE LOCAÇÃO.docx')
+
+def numero_por_extenso(n):
+    if n < 0 or n > 999:
+        return "Número fora do intervalo suportado"
+    
+    unidades = ["zero", "um", "dois", "três", "quatro", "cinco", "seis", "sete", "oito", "nove"]
+    especiais = ["dez", "onze", "doze", "treze", "quatorze", "quinze", "dezesseis", "dezessete", "dezoito", "dezenove"]
+    dezenas = ["", "", "vinte", "trinta", "quarenta", "cinquenta", "sessenta", "setenta", "oitenta", "noventa"]
+    centenas = ["", "cem", "duzentos", "trezentos", "quatrocentos", "quinhentos", "seiscentos", "setecentos", "oitocentos", "novecentos"]
+    
+    if n == 0:
+        return unidades[0]
+    
+    texto = ""
+    c = n // 100
+    d = (n % 100) // 10
+    u = n % 10
+    
+    # Centenas
+    if c > 0:
+        if n % 100 == 0 and c == 1:
+            return "cem"
+        else:
+            texto += centenas[c]
+    
+    # Dezenas e unidades
+    resto = n % 100
+    if resto > 0:
+        if texto != "":
+            texto += " e "
+        if resto < 10:
+            texto += unidades[resto]
+        elif 10 <= resto < 20:
+            texto += especiais[resto - 10]
+        else:
+            texto += dezenas[d]
+            if u > 0:
+                texto += " e " + unidades[u]
+    
+    return texto
+
+def ordinal_por_extenso(n):
+    ordinais_ate_20 = [
+        "primeiro", "segundo", "terceiro", "quarto", "quinto",
+        "sexto", "sétimo", "oitavo", "nono", "décimo",
+        "décimo primeiro", "décimo segundo", "décimo terceiro",
+        "décimo quarto", "décimo quinto", "décimo sexto",
+        "décimo sétimo", "décimo oitavo", "décimo nono", "vigésimo"
+    ]
+    ordinais_dezenas = {
+        20: "vigésimo",
+        30: "trigésimo",
+    }
+    
+    if n < 1 or n > 31:
+        return "Número fora do intervalo suportado"
+    elif n <= 20:
+        return ordinais_ate_20[n-1]
+    elif 21 <= n <= 29:
+        return "vigésimo " + ordinal_por_extenso(n - 20)
+    elif n == 30:
+        return "trigésimo"
+    elif n == 31:
+        return "trigésimo primeiro"
 
 # Dicionários para formatação de datas
-ordinais_ate_31 = {
-    1: "primeiro", 2: "segundo", 3: "terceiro", 4: "quarto", 5: "quinto", 6: "sexto", 7: "sétimo",
-    8: "oitavo", 9: "nono", 10: "décimo", 11: "décimo primeiro", 12: "décimo segundo",
-    13: "décimo terceiro", 14: "décimo quarto", 15: "décimo quinto", 16: "décimo sexto",
-    17: "décimo sétimo", 18: "décimo oitavo", 19: "décimo nono", 20: "vigésimo",
-    21: "vigésimo primeiro", 22: "vigésimo segundo", 23: "vigésimo terceiro",
-    24: "vigésimo quarto", 25: "vigésimo quinto", 26: "vigésimo sexto", 27: "vigésimo sétimo",
-    28: "vigésimo oitavo", 29: "vigésimo nono", 30: "trigésimo", 31: "trigésimo primeiro"
-}
-
 meses = {
     1: "janeiro", 2: "fevereiro", 3: "março", 4: "abril", 5: "maio", 6: "junho",
     7: "julho", 8: "agosto", 9: "setembro", 10: "outubro", 11: "novembro", 12: "dezembro"
@@ -44,6 +101,12 @@ def formatar_data(data_str):
             return data_str
     return ""
 
+# Função para formatar o dia de pagamento
+def formatar_dia_pagamento(dia_pag):
+    if dia_pag.isdigit():
+        return num2words(int(dia_pag), to='ordinal', lang='pt')
+    return dia_pag
+
 # Página principal
 @app.route('/', methods=['GET', 'POST'])
 def form():
@@ -55,64 +118,58 @@ def form():
         rg = request.form.get("rg", "").zfill(9)
         rg_formatado = f"{rg[:2]}.{rg[2:5]}.{rg[5:8]}-{rg[8]}" if len(rg) == 9 else rg
 
-        # Formatação do dia de pagamento
-        dia_pag = request.form.get("dia_pag", "").strip()
-        if dia_pag.isdigit():
-            dia_pag_int = int(dia_pag)
-            if 1 <= dia_pag_int <= 31:
-                dia_pag_ord = ordinais_ate_31.get(dia_pag_int, "")
-            else:
-                dia_pag_ord = ""
+         # Formatação de datas
+        data_inicio = request.form.get("data_inicio", "").strip()
+        if "-" in data_inicio or "/" in data_inicio:
+            data_inicio = formatar_data(data_inicio)
         else:
-            dia_pag_ord = ""
+            data_inicio = "Formato inválido"
 
-        # Formatação de datas
-        data_inicio = request.form.get("data_inicio", "")
-        data_fim = request.form.get("data_fim", "")
-
-        # Formatação do prazo e valor
-        prazo = request.form.get("prazo_meses", "")
-        if prazo.isdigit():
-            prazo_extenso = num2words(prazo, lang='pt')
+        data_fim = request.form.get("data_fim", "").strip()
+        if "-" in data_fim or "/" in data_fim:
+            data_fim = formatar_data(data_fim)
         else:
-            prazo_extenso = prazo
-        valor = request.form.get("valor", "")
-        if valor.isdigit():
-            valor_extenso = num2words(valor, lang='pt')
-        else:
-            valor_extenso = valor
+            data_fim = "Formato inválido"
+        
+        # Cache the formatted current date
+        data_atual_formatada = formatar_data(datetime.now().strftime("%d/%m/%Y"))
 
-        # inicializa o dicionário de dados
-        dados = {
-            "<<NOME>>": request.form.get("nome_completo", ""),
-            "<<CPF>>": cpf_formatado,
-            "<<RG>>": rg_formatado,
-            "<<ORGAO EMISSOR>>": request.form.get("orgao_emissor", ""),
-            "<<ESTADO EMISSOR>>": request.form.get("estado_emissor", ""),
-            "<<CIDADE>>": request.form.get("cidade", ""),
-            "<<ESTADO>>": request.form.get("estado", ""),
-            "<<LOGRADOURO>>": request.form.get("logradouro", ""),
-            "<<RUA>>": request.form.get("rua", ""),
-            "<<BAIRRO>>": request.form.get("bairro", ""),
-            "<<CEP>>": request.form.get("cep", ""),
-            "<<OBJETO>>": request.form.get("objeto", ""),
-            "<<MARCA>>": request.form.get("marca", ""),
-            "<<MODELO>>": request.form.get("modelo", ""),
-            "<<PRAZO>>": prazo,
-            "<<PRAZO_EXTENSO>>": prazo_extenso,
-            "<<INICIO>>": formatar_data(data_inicio),
-            "<<FIM>>": formatar_data(data_fim),
-            "<<DIA PAG>>": dia_pag,
-            "<<DIA_PAG_ORD>>": dia_pag_ord,
-            "<<VALOR>>": request.form.get("valor", ""),
-            "<<VALOR_EXTENSO>>": valor_extenso,
-            "<<DATA>>": formatar_data(datetime.now().strftime("%d/%m/%Y")),
-        }
+        def obter_dados_formulario():
+            prazo = request.form.get("prazo_meses", "")
+            dia_pag = request.form.get("dia_pag", "")
+            valor = request.form.get("valor", "")
 
+            return {
+                "<<NOME>>": request.form.get("nome_completo", ""),
+                "<<CPF>>": cpf_formatado,
+                "<<RG>>": rg_formatado,
+                "<<ORGAO EMISSOR>>": request.form.get("orgao_emissor", ""),
+                "<<ESTADO EMISSOR>>": request.form.get("estado_emissor", ""),
+                "<<CIDADE>>": request.form.get("cidade", ""),
+                "<<ESTADO>>": request.form.get("estado", ""),
+                "<<LOGRADOURO>>": request.form.get("logradouro", ""),
+                "<<BAIRRO>>": request.form.get("bairro", ""),
+                "<<CEP>>": request.form.get("cep", ""),
+                "<<OBJETO>>": request.form.get("objeto", ""),
+                "<<MARCA>>": request.form.get("marca", ""),
+                "<<MODELO>>": request.form.get("modelo", ""),
+                "<<PRAZO>>": prazo,
+                "<<PRAZO_EXTENSO>>": numero_por_extenso(int(prazo)) if prazo.isdigit() else VALOR_INVALIDO_MSG,
+                "<<DIA PAG>>": request.form.get("dia_pag", ""),
+                "<<DIA PAG_ORD>>": formatar_dia_pagamento(dia_pag),
+                "<<INICIO>>": data_inicio,
+                "<<FIM>>": data_fim,
+                "<<VALOR>>": valor,
+                "<<VALOR_EXTENSO>>": numero_por_extenso(int(valor)) if valor.isdigit() else VALOR_INVALIDO_MSG,
+                "<<DATA>>": data_atual_formatada,
+            }
         if not os.path.isfile(CAMINHO_MODELO):
             return "Modelo de contrato não encontrado.", 500
 
         doc = Document(CAMINHO_MODELO)
+
+        # Obtenha os dados do formulário
+        dados = obter_dados_formulario()
 
         # Função de substituição
         def substituir_texto(paragrafos):
@@ -130,7 +187,7 @@ def form():
             for linha in tabela.rows:
                 for celula in linha.cells:
                     substituir_texto(celula.paragraphs)
-
+                    
         # Define o nome do arquivo para download
         nome_pessoa = request.form.get("nome_completo", "documento").strip().replace(" ", "_")
         nome_arquivo = f"{nome_pessoa}_Contrato.docx"
@@ -139,11 +196,10 @@ def form():
         file_stream = BytesIO()
         doc.save(file_stream)
         file_stream.seek(0)
-        arquivo_bytes = file_stream.read()
 
-        # Faz o download automático
+        # Retorna para download no Flask
         return send_file(
-            BytesIO(arquivo_bytes),
+            file_stream,
             as_attachment=True,
             download_name=nome_arquivo,
             mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
