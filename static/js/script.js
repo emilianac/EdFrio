@@ -123,3 +123,49 @@ function calcularDataFim() {
   const dataFim = `${anoFim}-${mesFim}-${diaFim}`; // formato para input type="date"
   document.getElementById('data_fim').value = dataFim;
 }
+
+function tipoVenda() {
+  const tipo = document.getElementById('tipo').value;
+  const objeto_resfriador = document.getElementById('objeto_resfriador');
+  const objeto_ordenhadeira = document.getElementById('objeto_ordenhadeira');
+
+  if (tipo === 'venda_res') {
+    objeto_resfriador.style.display = 'block';
+    objeto_ordenhadeira.style.display = 'none';
+  } else if (tipo === 'venda_ord') {
+    objeto_resfriador.style.display = 'none';
+    objeto_ordenhadeira.style.display = 'block';
+  } else {
+    objeto_resfriador.style.display = 'none';
+    objeto_ordenhadeira.style.display = 'none';
+  }
+}
+
+function entrada() {
+    const tipo = document.getElementById('tipo_entrada').value;
+    const campoValorEntrada = document.getElementById('entrada_valor');
+    const inputValorEntrada = document.getElementById('valor_entrada');
+
+    if (tipo === 'sim') {
+        campoValorEntrada.style.display = 'block';
+        inputValorEntrada.required = true;
+    } else {
+        campoValorEntrada.style.display = 'none';
+        inputValorEntrada.required = false;
+        inputValorEntrada.value = '';
+    }
+}
+
+function valorParcela() {
+    const valor_entrada = parseFloat(document.getElementById('valor_entrada').value) || 0;
+    const valor_total = parseFloat(document.getElementById('valor_total').value);
+    const prazo_meses = parseInt(document.getElementById('prazo_meses').value, 10);
+
+    if (!isNaN(valor_total) && !isNaN(prazo_meses) && prazo_meses > 0) {
+        const valorFinanciado = valor_total - valor_entrada;
+        const parcela = (valorFinanciado / prazo_meses);
+        document.getElementById('valor').value = parcela;
+    } else {
+        document.getElementById('valor').value = '';
+    }
+}

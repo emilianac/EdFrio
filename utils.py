@@ -2,56 +2,65 @@
 from num2words import num2words
 from docx import Document
 from flask import request
+from babel.numbers import format_currency
 
 def numero_por_extenso(n):
     if not isinstance(n, int):
         return "Valor inválido"
-    if n < 0 or n > 9999:
-        return "Número fora do intervalo suportado (0-9999)"
+    if n < 0 or n > 999999:
+        return "Número fora do intervalo suportado (0-999999)"
     
     unidades = ["zero", "um", "dois", "três", "quatro", "cinco", "seis", "sete", "oito", "nove"]
     especiais = ["dez", "onze", "doze", "treze", "quatorze", "quinze", "dezesseis", "dezessete", "dezoito", "dezenove"]
     dezenas = ["", "", "vinte", "trinta", "quarenta", "cinquenta", "sessenta", "setenta", "oitenta", "noventa"]
     centenas = ["", "cento", "duzentos", "trezentos", "quatrocentos", "quinhentos", "seiscentos", "setecentos", "oitocentos", "novecentos"]
 
+    def tres_digitos_por_extenso(num):
+        if num == 0:
+            return ""
+        texto = ""
+        c = num // 100
+        d = (num % 100) // 10
+        u = num % 10
+        resto = num % 100
+
+        # Centenas
+        if c > 0:
+            if c == 1 and resto == 0:
+                texto += "cem"
+            else:
+                texto += centenas[c]
+
+        # Dezenas e unidades
+        if resto > 0:
+            if texto != "":
+                texto += " e "
+            if resto < 10:
+                texto += unidades[resto]
+            elif 10 <= resto < 20:
+                texto += especiais[resto - 10]
+            else:
+                texto += dezenas[d]
+                if u > 0:
+                    texto += " e " + unidades[u]
+        return texto
+
+    milhares = n // 1000
+    resto = n % 1000
     texto = ""
 
-    m = n // 1000
-    c = (n % 1000) // 100
-    d = (n % 100) // 10
-    u = n % 10
-
-    # Milhares
-    if m > 0:
-        if m == 1:
+    if milhares > 0:
+        if milhares == 1:
             texto += "mil"
         else:
-            texto += unidades[m] + " mil"
+            texto += tres_digitos_por_extenso(milhares) + " mil"
 
-    # Centenas
-    if c > 0:
-        if texto:
-            texto += " "
-        if c == 1 and d == 0 and u == 0:
-            texto += "cem"
-        else:
-            texto += centenas[c]
-
-    # Dezenas e unidades
-    resto = n % 100
     if resto > 0:
-        if texto and (c != 0 or m != 0):
+        if texto != "":
             texto += " e "
-        if resto < 10:
-            texto += unidades[resto]
-        elif 10 <= resto < 20:
-            texto += especiais[resto - 10]
-        else:
-            texto += dezenas[d]
-            if u > 0:
-                texto += " e " + unidades[u]
+        texto += tres_digitos_por_extenso(resto)
     elif n == 0:
-        texto = unidades[0]
+        texto = "zero"
 
     return texto
 
@@ -127,3 +136,14 @@ def substituir_dados_doc(doc, dados):
                 substituir_texto(celula.paragraphs)
 
     return doc
+
+VALOR_INVALIDO_MSG = "valor inválido"  # ou importe de outro lugar, se já tiver definido
+def texto_entrada(valor_entrada_raw: str, tipo_entrada: str, numero_por_extenso) -> str:
+    valor_entrada_raw = valor_entrada_raw.strip()
+    if tipo_entrada != "sim":
+        return "sem entrada"
+    else:
+        valor_entrada_formatada = valor_entrada_raw
+        valor_extenso = numero_por_extenso(int(valor_entrada_raw)) 
+        return f"com entrada de R$ {valor_entrada_formatada} ({valor_extenso} reais)"
+    
