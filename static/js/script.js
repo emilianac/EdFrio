@@ -88,9 +88,13 @@ const rgInput = document.getElementById('rg');
     rg = rg.replace(/[^0-9a-zA-Z]/g, '');
 
     // Aplica máscara: 12.345.678-9
-    if (rg.length > 2) rg = rg.slice(0, 2) + '.' + rg.slice(2);
-    if (rg.length > 6) rg = rg.slice(0, 6) + '.' + rg.slice(6);
-    if (rg.length > 10) rg = rg.slice(0, 10) + '-' + rg.slice(10, 11);
+    if (rg.length === 7) {
+      rg = `${rg[0]}.${rg.slice(1, 4)}.${rg.slice(4)}`;
+    } else if (rg.length === 8) {
+      rg = `${rg.slice(0, 2)}.${rg.slice(2, 5)}.${rg.slice(5)}`;
+    } else if (rg.length === 9) {
+      rg = `${rg.slice(0, 2)}.${rg.slice(2, 5)}.${rg.slice(5, 8)}-${rg[8]}`;
+    }
 
     rgInput.value = rg;
 
@@ -163,8 +167,9 @@ function valorParcela() {
 
     if (!isNaN(valor_total) && !isNaN(prazo_meses) && prazo_meses > 0) {
         const valorFinanciado = valor_total - valor_entrada;
-        const parcela = (valorFinanciado / prazo_meses);
-        document.getElementById('valor').value = parcela;
+        const parcela = valorFinanciado / prazo_meses;
+
+        document.getElementById('valor').value = parcela.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     } else {
         document.getElementById('valor').value = '';
     }

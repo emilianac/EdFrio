@@ -3,7 +3,7 @@ from datetime import datetime
 from io import BytesIO
 from docx import Document
 import os
-from utils import formatar_data, formatar_dia_pagamento, numero_por_extenso, substituir_dados_doc, texto_entrada
+from utils import formatar_data, formatar_dia_pagamento, numero_por_extenso, substituir_dados_doc, texto_entrada, numero_por_extenso_com_decimal
 from babel.numbers import format_currency
 
 app = Flask(__name__)
@@ -25,8 +25,6 @@ def form_aluguel():
         # Formatação CPF e RG
         cpf = request.form.get("cpf", "").zfill(11)
         cpf_formatado = f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}" if len(cpf) == 11 else cpf
-        rg = request.form.get("rg", "").zfill(9)
-        rg_formatado = f"{rg[:2]}.{rg[2:5]}.{rg[5:8]}-{rg[8]}" if len(rg) == 9 else rg
 
         # Formatação das datas
         data_inicio = request.form.get("data_inicio", "").strip()
@@ -50,22 +48,22 @@ def form_aluguel():
             dia_pag = request.form.get("dia_pag", "")
             valor = request.form.get("valor", "")
             quantidade = request.form.get("quantidade", "")
+            multa = request.form.get("multa", "")
 
             return {
                 "<<NOME>>": request.form.get("nome_completo", ""),
                 "<<CPF>>": cpf_formatado,
-                "<<RG>>": rg_formatado,
+                "<<RG>>": request.form.get("rg", ""),
                 "<<ORGAO EMISSOR>>": request.form.get("orgao_emissor", ""),
                 "<<ESTADO EMISSOR>>": request.form.get("estado_emissor", ""),
                 "<<CIDADE>>": request.form.get("cidade", ""),
                 "<<ESTADO>>": request.form.get("estado", ""),
                 "<<LOGRADOURO>>": request.form.get("logradouro", ""),
-                "<<NUMERO>>": request.form.get("numero", ""),
+                "<<NUM>>": request.form.get("numero", ""),
                 "<<BAIRRO>>": request.form.get("bairro", ""),
                 "<<CEP>>": request.form.get("cep", ""),
                 "<<QUANTIDADE>>": request.form.get("quantidade", ""),
                 "<<QUANTIDADE_EXTENSO>>": numero_por_extenso(int(quantidade)) if quantidade.isdigit() and 1 <= int(quantidade) <= 31 else VALOR_INVALIDO_MSG,
-                "<<OBJETO>>": request.form.get("objeto", ""),
                 "<<MARCA>>": request.form.get("marca", ""),
                 "<<MODELO>>": request.form.get("modelo", ""),
                 "<<PRAZO>>": prazo,
@@ -76,6 +74,8 @@ def form_aluguel():
                 "<<FIM>>": data_fim_formatada,
                 "<<VALOR>>": valor,
                 "<<VALOR_EXTENSO>>": numero_por_extenso(int(valor)),
+                "<<MULTA>>": multa,
+                "<<MULTA_EXTENSO>>": numero_por_extenso(int(multa)) if multa.isdigit() else VALOR_INVALIDO_MSG,
                 "<<DATA>>": data_atual_formatada,
             }
         
@@ -140,8 +140,6 @@ def form_aluguel_ord():
         # Formatação CPF e RG
         cpf = request.form.get("cpf", "").zfill(11)
         cpf_formatado = f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}" if len(cpf) == 11 else cpf
-        rg = request.form.get("rg", "").zfill(9)
-        rg_formatado = f"{rg[:2]}.{rg[2:5]}.{rg[5:8]}-{rg[8]}" if len(rg) == 9 else rg
 
         # Formatação das datas
         data_inicio = request.form.get("data_inicio", "").strip()
@@ -166,11 +164,12 @@ def form_aluguel_ord():
             valor = request.form.get("valor", "")
             quantidade = request.form.get("quantidade", "")
             qtde = request.form.get("qtd", "")
+            multa = request.form.get("multa", "")
 
             return {
                 "<<NOME>>": request.form.get("nome_completo", ""),
                 "<<CPF>>": cpf_formatado,
-                "<<RG>>": rg_formatado,
+                "<<RG>>": request.form.get("rg", ""),
                 "<<ORGAO EMISSOR>>": request.form.get("orgao_emissor", ""),
                 "<<ESTADO EMISSOR>>": request.form.get("estado_emissor", ""),
                 "<<CIDADE>>": request.form.get("cidade", ""),
@@ -178,7 +177,7 @@ def form_aluguel_ord():
                 "<<LOGRADOURO>>": request.form.get("logradouro", ""),
                 "<<BAIRRO>>": request.form.get("bairro", ""),
                 "<<CEP>>": request.form.get("cep", ""),
-                "<<NUMERO>>": request.form.get("numero", ""),
+                "<<NUM>>": request.form.get("numero", ""),
                 "<<QUANTIDADE>>": request.form.get("quantidade", ""),
                 "<<QUANTIDADE_EXTENSO>>": numero_por_extenso(int(quantidade)) if quantidade.isdigit() and 1 <= int(quantidade) <= 31 else VALOR_INVALIDO_MSG,
                 "<<OBJETO>>": request.form.get("objeto", ""),
@@ -195,6 +194,8 @@ def form_aluguel_ord():
                 "<<FIM>>": data_fim_formatada,
                 "<<VALOR>>": valor,
                 "<<VALOR_EXTENSO>>": numero_por_extenso(int(valor)),
+                "<<MULTA>>": multa,
+                "<<MULTA_EXTENSO>>": numero_por_extenso(int(multa)) if multa.isdigit() else VALOR_INVALIDO_MSG,
                 "<<DATA>>": data_atual_formatada,
             }
         
@@ -267,7 +268,7 @@ def form_venda():
             tipo_entrada = request.form.get("tipo_entrada", "")
             valor_entrada = request.form.get("valor_entrada", "")
             tipo_entrada = request.form.get("tipo_entrada", "")
-            texto = texto_entrada(valor_entrada, tipo_entrada, numero_por_extenso)
+            texto = texto_entrada(valor_entrada, tipo_entrada, numero_por_extenso_com_decimal)
             
 
             if tipo_venda == "venda_res":
@@ -285,7 +286,7 @@ def form_venda():
                     "<<NUMERO>>": request.form.get("numero", ""),
                     "<<QUANTIDADE>>": request.form.get("quantidade_res", ""),
                     "<<QUANTIDADE_EXTENSO>>": numero_por_extenso(int(quantidade_res)) if quantidade_res.isdigit() and 1 <= int(quantidade_res) <= 31 else VALOR_INVALIDO_MSG,
-                    "<<OBJETO>>": request.form.get("objeto_res", ""),
+                    "<<OBJETO>>": "Tanque Resfriador",
                     "<<MARCA>>": request.form.get("marca_res", ""),
                     "<<MODELO>>": request.form.get("modelo_res", ""),
                     "<<COMPLEMENTO>>": "",
@@ -295,7 +296,7 @@ def form_venda():
                     "<<PARCELA>>": prazo,
                     "<<PARCELA_EXTENSO>>": numero_por_extenso(int(prazo)) if prazo.isdigit() and 1 <= int(prazo) <= 31 else VALOR_INVALIDO_MSG,
                     "<<VALOR_PARCELA>>": valor,
-                    "<<VALOR_PARCELA_EXTENSO>>": numero_por_extenso(int(valor)) if valor.isdigit() else VALOR_INVALIDO_MSG,
+                    "<<VALOR_PARCELA_EXTENSO>>": numero_por_extenso_com_decimal(float(valor.replace(',', '.'))) if valor.replace(',', '.').replace('.', '').isdigit() else VALOR_INVALIDO_MSG,
                     "<<INICIO>>": data_inicio_formatada,
                     "<<FIM>>": data_fim_formatada,
                     "<<DATA>>": data_atual_formatada,
@@ -315,7 +316,7 @@ def form_venda():
                     "<<NUMERO>>": request.form.get("numero", ""),
                     "<<QUANTIDADE>>": request.form.get("quantidade_ord", ""),
                     "<<QUANTIDADE_EXTENSO>>": numero_por_extenso(int(quantidade_ord)) if quantidade_ord.isdigit() and 1 <= int(quantidade_ord) <= 31 else VALOR_INVALIDO_MSG,
-                    "<<OBJETO>>": request.form.get("objeto_ord", ""),
+                    "<<OBJETO>>": "Ordenhadeira",
                     "<<MARCA>>": request.form.get("marca_ord", ""),
                     "<<MODELO>>": request.form.get("modelo_ord", ""),
                     "<<COMPLEMENTO>>": request.form.get("complemento_ord", ""),
@@ -325,7 +326,7 @@ def form_venda():
                     "<<PARCELA>>": prazo,
                     "<<PARCELA_EXTENSO>>": numero_por_extenso(int(prazo)) if prazo.isdigit() and 1 <= int(prazo) <= 31 else VALOR_INVALIDO_MSG,
                     "<<VALOR_PARCELA>>": valor,
-                    "<<VALOR_PARCELA_EXTENSO>>": numero_por_extenso(int(valor)) if valor.isdigit() else VALOR_INVALIDO_MSG,
+                    "<<VALOR_PARCELA_EXTENSO>>": numero_por_extenso_com_decimal(float(valor.replace(',', '.'))) if valor.replace(',', '.').replace('.', '').isdigit() else VALOR_INVALIDO_MSG,
                     "<<INICIO>>": data_inicio_formatada,
                     "<<FIM>>": data_fim_formatada,
                     "<<DATA>>": data_atual_formatada,

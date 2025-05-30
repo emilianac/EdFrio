@@ -4,6 +4,33 @@ from docx import Document
 from flask import request
 from babel.numbers import format_currency
 
+def numero_por_extenso_com_decimal(n):
+    # Aceita int ou float
+    if not isinstance(n, (int, float)):
+        return "Valor inválido"
+    
+    if n < 0 or n >= 1000000:
+        return "Número fora do intervalo suportado (0-999999,99)"
+
+    inteiro = int(n)
+    
+    # Cálculo do decimal - pega o valor decimal com duas casas, arredondando para evitar problemas
+    decimal = int(round((n - inteiro) * 100))
+    
+    # Se decimal chegar a 100 (exemplo: 945.995 arredonda), ajusta para inteiro + 1 e decimal 0
+    if decimal == 100:
+        inteiro += 1
+        decimal = 0
+
+    texto_inteiro = numero_por_extenso(inteiro)
+    
+    if decimal > 0:
+        texto_decimal = numero_por_extenso(decimal)
+        return f"{texto_inteiro} vírgula {texto_decimal}"
+    else:
+        return texto_inteiro
+
+# Função original ajustada para aceitar somente int
 def numero_por_extenso(n):
     if not isinstance(n, int):
         return "Valor inválido"
@@ -24,14 +51,12 @@ def numero_por_extenso(n):
         u = num % 10
         resto = num % 100
 
-        # Centenas
         if c > 0:
             if c == 1 and resto == 0:
                 texto += "cem"
             else:
                 texto += centenas[c]
 
-        # Dezenas e unidades
         if resto > 0:
             if texto != "":
                 texto += " e "
@@ -140,10 +165,22 @@ def substituir_dados_doc(doc, dados):
 VALOR_INVALIDO_MSG = "valor inválido"  # ou importe de outro lugar, se já tiver definido
 def texto_entrada(valor_entrada_raw: str, tipo_entrada: str, numero_por_extenso) -> str:
     valor_entrada_raw = valor_entrada_raw.strip()
+    
     if tipo_entrada != "sim":
         return "sem entrada"
-    else:
-        valor_entrada_formatada = valor_entrada_raw
-        valor_extenso = numero_por_extenso(int(valor_entrada_raw)) 
-        return f"com entrada de R$ {valor_entrada_formatada} ({valor_extenso} reais)"
     
+    try:
+        # Substitui vírgula por ponto para converter para float
+        valor_float = float(valor_entrada_raw.replace(',', '.'))
+    except ValueError:
+        return VALOR_INVALIDO_MSG
+
+    # Formatar valor para estilo brasileiro com 2 casas decimais
+    valor_formatado = f"{valor_float:.2f}".replace('.', ',')
+
+    # Para escrever por extenso, normalmente usamos a parte inteira
+    valor_inteiro = int(valor_float)
+
+    valor_extenso = numero_por_extenso(valor_inteiro)
+
+    return f"com entrada de R$ {valor_formatado} ({valor_extenso} reais)"
