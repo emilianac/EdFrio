@@ -124,6 +124,26 @@ function tipoRG() {
   }
 }
 
+// Transformador
+function tipTransformador() {
+      const transformador = document.getElementById('transformador').value;
+      const campoTrans = document.getElementById('campo_trans');
+      const qtd_trans = document.getElementById('qtd_trans');
+      const qtd_va = document.getElementById('qtd_va');
+
+      if (transformador === 'trans_sim') {
+        campoTrans.style.display = 'block';
+        qtd_trans.required = true;
+        qtd_va.required = true;
+      } else {
+        campoTrans.style.display = 'none';
+        qtd_trans.required = false;
+        qtd_trans.value = ''; 
+        qtd_va.required = false;
+        qtd_va.value = ''; 
+      }
+    }
+
 // Data fim
 function calcularDataFim() {
   const dataInicioStr = document.getElementById('data_inicio').value;

@@ -122,6 +122,23 @@
                 <label for="text">Modelo</label>
                 <input type="text" id="modelo" name="modelo" required />
 
+                <fieldset>
+                <legend>Transformador</legend>
+                <select id="transformador" name="transformador" onchange="tipTransformador()" required>
+                    <option value="" disabled selected>Selecione a opção</option>
+                    <option value="trans_sim">Sim</option>
+                    <option value="trans_nao">Não</option>
+                </select>
+                </fieldset>
+
+                <fieldset id="campo_trans" style="display: none;">
+                    <label for="qtd_trans">Quantidade de transformador</label>
+                    <input type="number" id="qtd_trans" name="qtd_trans" />
+
+                    <label for="qtd_va">Quantidade de VA</label>
+                    <input type="number" id="qtd_va" name="qtd_va" />
+                </fieldset>
+
                 </fieldset>
                 <fieldset>
 

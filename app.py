@@ -52,6 +52,19 @@ def form_aluguel():
             quantidade = request.form.get("quantidade", "")
             multa = request.form.get("multa", "")
             tipo_rg = request.form.get("rg_tipo", "")
+            transformador = request.form.get("transformador", "")
+            qtd_trans = request.form.get("qtd_trans", "")
+            qtd_va = request.form.get("qtd_va", "")
+
+            if transformador == "trans_sim":
+                if qtd_trans.isdigit() and 1 <= int(qtd_trans) <= 31:
+                    qtd_trans_ext = numero_por_extenso(int(qtd_trans))
+                else:
+                    qtd_trans_ext = VALOR_INVALIDO_MSG
+
+                info_trans = f" com {qtd_trans} ({qtd_trans_ext}) TRANSFORMADOR {qtd_va} VA"
+            else:
+                info_trans = ""
 
             if tipo_rg == "rg_antigo":
                 rg_valor = ", RG " + rg_formatado
@@ -77,6 +90,7 @@ def form_aluguel():
                 "<<QUANTIDADE_EXTENSO>>": numero_por_extenso(int(quantidade)) if quantidade.isdigit() and 1 <= int(quantidade) <= 31 else VALOR_INVALIDO_MSG,
                 "<<MARCA>>": request.form.get("marca", ""),
                 "<<MODELO>>": request.form.get("modelo", ""),
+                "<<TRANSFORMADOR>>": info_trans,
                 "<<PRAZO>>": prazo,
                 "<<PRAZO_EXTENSO>>": numero_por_extenso(int(prazo)) if prazo.isdigit() and 1 <= int(prazo) <= 31 else VALOR_INVALIDO_MSG,
                 "<<DIA PAG>>": request.form.get("dia_pag", ""),
