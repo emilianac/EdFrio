@@ -162,7 +162,8 @@ def substituir_dados_doc(doc, dados):
 
     return doc
 
-VALOR_INVALIDO_MSG = "valor inválido"  # ou importe de outro lugar, se já tiver definido
+# Função Texto valor
+VALOR_INVALIDO_MSG = "valor inválido" 
 def texto_entrada(valor_entrada_raw: str, tipo_entrada: str, numero_por_extenso) -> str:
     valor_entrada_raw = valor_entrada_raw.strip()
     
@@ -184,3 +185,12 @@ def texto_entrada(valor_entrada_raw: str, tipo_entrada: str, numero_por_extenso)
     valor_extenso = numero_por_extenso(valor_inteiro)
 
     return f"com entrada de R$ {valor_formatado} ({valor_extenso} reais)"
+
+# Função Converte um valor monetário em string (formato brasileiro) para float.
+def valor_monetario_para_float(valor_str):
+    try:
+        # Remove pontos de milhar e substitui vírgula por ponto decimal
+        valor_str = valor_str.replace('.', '').replace(',', '.')
+        return float(valor_str)
+    except ValueError:
+        return None

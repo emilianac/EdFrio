@@ -3,7 +3,7 @@ from datetime import datetime
 from io import BytesIO
 from docx import Document
 import os
-from utils import formatar_data, formatar_dia_pagamento, numero_por_extenso, substituir_dados_doc, texto_entrada, numero_por_extenso_com_decimal
+from utils import formatar_data, formatar_dia_pagamento, numero_por_extenso, substituir_dados_doc, texto_entrada, numero_por_extenso_com_decimal, valor_monetario_para_float
 from babel.numbers import format_currency
 
 app = Flask(__name__)
@@ -25,6 +25,8 @@ def form_aluguel():
         # Formatação CPF e RG
         cpf = request.form.get("cpf", "").zfill(11)
         cpf_formatado = f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}" if len(cpf) == 11 else cpf
+        rg = request.form.get("num_rg", "").zfill(9)
+        rg_formatado = f"{rg[:2]}.{rg[2:5]}.{rg[5:8]}-{rg[8]}" if len(rg) == 9 else rg
 
         # Formatação das datas
         data_inicio = request.form.get("data_inicio", "").strip()
@@ -49,13 +51,22 @@ def form_aluguel():
             valor = request.form.get("valor", "")
             quantidade = request.form.get("quantidade", "")
             multa = request.form.get("multa", "")
+            tipo_rg = request.form.get("rg_tipo", "")
 
+            if tipo_rg == "rg_antigo":
+                rg_valor = ", RG " + rg_formatado
+                orgao_emissor_valor = request.form.get("orgao_emissor", "")
+                estado_emissor_valor = request.form.get("estado_emissor", "")
+            else:
+                rg_valor = ""
+                orgao_emissor_valor = ""
+                estado_emissor_valor = ""
             return {
                 "<<NOME>>": request.form.get("nome_completo", ""),
                 "<<CPF>>": cpf_formatado,
-                "<<RG>>": request.form.get("rg", ""),
-                "<<ORGAO EMISSOR>>": request.form.get("orgao_emissor", ""),
-                "<<ESTADO EMISSOR>>": request.form.get("estado_emissor", ""),
+                "<<RG>>": rg_valor,
+                "<<ORGAO EMISSOR>>": orgao_emissor_valor,
+                "<<ESTADO EMISSOR>>": estado_emissor_valor,
                 "<<CIDADE>>": request.form.get("cidade", ""),
                 "<<ESTADO>>": request.form.get("estado", ""),
                 "<<LOGRADOURO>>": request.form.get("logradouro", ""),
@@ -140,6 +151,8 @@ def form_aluguel_ord():
         # Formatação CPF e RG
         cpf = request.form.get("cpf", "").zfill(11)
         cpf_formatado = f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}" if len(cpf) == 11 else cpf
+        rg = request.form.get("num_rg", "").zfill(9)
+        rg_formatado = f"{rg[:2]}.{rg[2:5]}.{rg[5:8]}-{rg[8]}" if len(rg) == 9 else rg
 
         # Formatação das datas
         data_inicio = request.form.get("data_inicio", "").strip()
@@ -165,13 +178,23 @@ def form_aluguel_ord():
             quantidade = request.form.get("quantidade", "")
             qtde = request.form.get("qtd", "")
             multa = request.form.get("multa", "")
+            tipo_rg = request.form.get("rg_tipo", "")
+            
+            if tipo_rg == "rg_antigo":
+                rg_valor = ", RG " + rg_formatado
+                orgao_emissor_valor = request.form.get("orgao_emissor", "")
+                estado_emissor_valor = request.form.get("estado_emissor", "")
+            else:
+                rg_valor = ""
+                orgao_emissor_valor = ""
+                estado_emissor_valor = ""
 
             return {
                 "<<NOME>>": request.form.get("nome_completo", ""),
                 "<<CPF>>": cpf_formatado,
-                "<<RG>>": request.form.get("rg", ""),
-                "<<ORGAO EMISSOR>>": request.form.get("orgao_emissor", ""),
-                "<<ESTADO EMISSOR>>": request.form.get("estado_emissor", ""),
+                "<<RG>>": rg_valor,
+                "<<ORGAO EMISSOR>>": orgao_emissor_valor,
+                "<<ESTADO EMISSOR>>": estado_emissor_valor,
                 "<<CIDADE>>": request.form.get("cidade", ""),
                 "<<ESTADO>>": request.form.get("estado", ""),
                 "<<LOGRADOURO>>": request.form.get("logradouro", ""),
@@ -238,8 +261,6 @@ def form_venda():
         # Formatação CPF e RG
         cpf = request.form.get("cpf", "").zfill(11)
         cpf_formatado = f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}" if len(cpf) == 11 else cpf
-        rg = request.form.get("rg", "").zfill(9)
-        rg_formatado = f"{rg[:2]}.{rg[2:5]}.{rg[5:8]}-{rg[8]}" if len(rg) == 9 else rg
 
         # Formatação das datas
         data_inicio = request.form.get("data_inicio", "").strip()
@@ -260,6 +281,7 @@ def form_venda():
         # Função para obter os dados do formulário
         def obter_dados_formulario():
             valor = request.form.get("valor", "")
+            valor_parcela_float = valor_monetario_para_float(valor)
             quantidade_res = request.form.get("quantidade_res", "")
             quantidade_ord = request.form.get("quantidade_ord", "")
             tipo_venda = request.form.get("tipo", "")
@@ -267,17 +289,21 @@ def form_venda():
             valor_total = request.form.get("valor_total", "")
             tipo_entrada = request.form.get("tipo_entrada", "")
             valor_entrada = request.form.get("valor_entrada", "")
+            try:
+                # Converter para float, tratando pontos como separador decimal
+                valor_float = float(valor_entrada.replace(',', '.'))  
+                # Formatar para string no formato '00,00'
+                valor_formatado = f"{valor_float:,.2f}".replace('.', ',')
+            except ValueError:
+                valor_formatado = "0,00"  # valor padrão caso a conversão falhe
+
             tipo_entrada = request.form.get("tipo_entrada", "")
-            texto = texto_entrada(valor_entrada, tipo_entrada, numero_por_extenso_com_decimal)
-            
+            texto = texto_entrada(valor_formatado, tipo_entrada, numero_por_extenso_com_decimal)
 
             if tipo_venda == "venda_res":
                 return {
                     "<<NOME>>": request.form.get("nome_completo", ""),
                     "<<CPF>>": cpf_formatado,
-                    "<<RG>>": rg_formatado,
-                    "<<ORGAO EMISSOR>>": request.form.get("orgao_emissor", ""),
-                    "<<ESTADO EMISSOR>>": request.form.get("estado_emissor", ""),
                     "<<CIDADE>>": request.form.get("cidade", ""),
                     "<<ESTADO>>": request.form.get("estado", ""),
                     "<<LOGRADOURO>>": request.form.get("logradouro", ""),
@@ -296,18 +322,15 @@ def form_venda():
                     "<<PARCELA>>": prazo,
                     "<<PARCELA_EXTENSO>>": numero_por_extenso(int(prazo)) if prazo.isdigit() and 1 <= int(prazo) <= 31 else VALOR_INVALIDO_MSG,
                     "<<VALOR_PARCELA>>": valor,
-                    "<<VALOR_PARCELA_EXTENSO>>": numero_por_extenso_com_decimal(float(valor.replace(',', '.'))) if valor.replace(',', '.').replace('.', '').isdigit() else VALOR_INVALIDO_MSG,
+                    "<<VALOR_PARCELA_EXTENSO>>": numero_por_extenso_com_decimal(valor_parcela_float) if valor_parcela_float is not None else VALOR_INVALIDO_MSG,
                     "<<INICIO>>": data_inicio_formatada,
                     "<<FIM>>": data_fim_formatada,
                     "<<DATA>>": data_atual_formatada,
-                }   
+                }
             else:
                 return {
                     "<<NOME>>": request.form.get("nome_completo", ""),
                     "<<CPF>>": cpf_formatado,
-                    "<<RG>>": rg_formatado,
-                    "<<ORGAO EMISSOR>>": request.form.get("orgao_emissor", ""),
-                    "<<ESTADO EMISSOR>>": request.form.get("estado_emissor", ""),
                     "<<CIDADE>>": request.form.get("cidade", ""),
                     "<<ESTADO>>": request.form.get("estado", ""),
                     "<<LOGRADOURO>>": request.form.get("logradouro", ""),
@@ -326,12 +349,13 @@ def form_venda():
                     "<<PARCELA>>": prazo,
                     "<<PARCELA_EXTENSO>>": numero_por_extenso(int(prazo)) if prazo.isdigit() and 1 <= int(prazo) <= 31 else VALOR_INVALIDO_MSG,
                     "<<VALOR_PARCELA>>": valor,
-                    "<<VALOR_PARCELA_EXTENSO>>": numero_por_extenso_com_decimal(float(valor.replace(',', '.'))) if valor.replace(',', '.').replace('.', '').isdigit() else VALOR_INVALIDO_MSG,
+                    "<<VALOR_PARCELA_EXTENSO>>": numero_por_extenso_com_decimal(valor_parcela_float) if valor_parcela_float is not None else VALOR_INVALIDO_MSG,
                     "<<INICIO>>": data_inicio_formatada,
                     "<<FIM>>": data_fim_formatada,
                     "<<DATA>>": data_atual_formatada,
                 }
-        
+            
+           
         # Verifica se o modelo de contrato existe
         if not os.path.isfile(CAMINHO_MODELO_VENDA):
             return "Modelo de contrato não encontrado.", 500
