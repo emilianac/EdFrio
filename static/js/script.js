@@ -164,6 +164,9 @@ function calcularDataFim() {
   const data = new Date(ano, mes, dia);
   data.setMonth(data.getMonth() + prazoMeses);
 
+  // Subtrai 1 dia da data final
+  data.setDate(data.getDate() - 1);
+
   const diaFim = String(data.getDate()).padStart(2, '0');
   const mesFim = String(data.getMonth() + 1).padStart(2, '0');
   const anoFim = data.getFullYear();
